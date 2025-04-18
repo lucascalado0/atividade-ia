@@ -8,24 +8,48 @@
     flex-direction: column;
 }
 
-.nav {
+.container > .nav {
     display: flex;
     justify-content: center;
-    padding-bottom: 20px;
+    padding-bottom: 50px;
 }
+
+
 
 .nav > a {
     padding-right: 20px;
     text-decoration: none;
 }
 
-.container > formulario {
+.container > .formulario {
     border: 1px solid black;
     display: flex;
     width: 50%;
     justify-content: center;
+    padding: 20px;
+    margin: 0 auto;
 }
 
 .formulario {
     border: 1px solid black;
+}
+
+
+.resultado {
+    background-color: #e8f5e9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.resultado h3 {
+    color: #388e3c;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.resultado p {
+    color: #2c6e2f;
+    font-size: 16px;
+    margin: 0;
 }

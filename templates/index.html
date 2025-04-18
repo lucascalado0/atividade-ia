@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="nav">
+            <a href="index.html">FORM</a>
+            <a href="dashboard.html">DASHBOARD</a>
+        </div>
+        <form class="row g-3" action="/" method="POST">
+            <div class="col-md-4">
+                <label for="radius" class="form-label">Radius</label>
+                <input type="number" class="form-control" name="radius" id="radius" placeholder="min: 6.98 / max: 28.11" required>
+            </div>
+            <div class="col-md-4">
+                <label for="texture" class="form-label">Texture</label>
+                <input type="number" class="form-control" name="texture" id="texture" placeholder="min: 9.71 / max: 39.28">
+            </div>
+            <div class="col-4">
+                <label for="perimeter" class="form-label">Perimeter</label>
+                <input type="number" class="form-control" name="perimeter" id="perimeter" placeholder="min: 43.79 / max: 188.50"
+                    required>
+            </div>
+            <div class="col-4">
+                <label for="area" class="form-label">Area</label>
+                <input type="number" class="form-control" name="area" id="area" placeholder="min: 143.50 / max: 2501.00" required>
+            </div>
+            <div class="col-md-4">
+                <label for="smmothness" class="form-label">Smoothness</label>
+                <input type="number" class="form-control" name="smoothness" id="smoothness" placeholder="min: 0.05 / max: 0.16" required>
+            </div>
+            <div class="col-md-4">
+                <label for="compactness" class="form-label">Compactness</label>
+                <input type="number" class="form-control" name="compactness" id="compactness" placeholder="min: 0.01 / max: 0.34" required>
+            </div>
+            <div class="col-md-4">
+                <label for="concavity" class="form-label">Concavity</label>
+                <input type="number" class="form-control" name="concavity" id="concavity" placeholder="min: 0.00 / max: 0.42" required>
+            </div>
+            <div class="col-md-4">
+                <label for="concave" class="form-label">Concave</label>
+                <input type="number" class="form-control" name="concave" id="concave" placeholder="min: 0.00 / max: 0.20" required>
+            </div>
+            <div class="col-md-4">
+                <label for="symmetry" class="form-label">Symmetry</label>
+                <input type="number" class="form-control" name="simmetry" id="symmetry" placeholder="min: 0.10 / max: 0.30" required>
+            </div>
+            <div class="col-md-4">
+                <label for="fractal" class="form-label">Fractal</label>
+                <input type="number" class="form-control" name="fractal" id="fractal" placeholder="min: 0.04 / max: 0.09" required>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Enviar dados</button>
+            </div>
+        </form>
+        <div>
+            {% if previsao is not none %}
+            <div class="resultado">
+                <h3>Resultado da Previsão:</h3>
+                <p>A previsão para o seu perfil é: {{ previsao }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>
