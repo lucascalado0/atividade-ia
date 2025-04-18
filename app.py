@@ -14,10 +14,6 @@ modelo = joblib.load(r'C:\Users\Lucas Vinicius\Desktop\IA\modelo_mlp.pkl')
 def home():
     return 'API do Modelo de Câncer - Online!'
 
-from flask import Flask, request, render_template
-import numpy as np
-import pickle  # ou joblib, dependendo do que você usou para salvar o modelo
-
 app = Flask(__name__)
 
 @app.route('/teste', methods=["GET", "POST"])
