@@ -1,6 +1,6 @@
 import psycopg2
 from datetime import datetime
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 import joblib
 import numpy as np
 import pandas as pd
@@ -29,11 +29,25 @@ def home():
 def index():
     if request.method == "POST":
         try:
-            # Captura os dados do formulário
-            radius_mean = float(request.form.get("radius"))
-            texture_mean = float(request.form.get("texture"))
-            perimeter_mean = float(request.form.get("perimeter"))
-            area_mean = float(request.form.get("area"))
+            # Verifica se os dados estão sendo enviados em JSON
+            if request.is_json:
+                dados = request.get_json()
+                
+                # Extraímos os dados enviados no JSON
+                radius_mean = dados.get("radius")
+                texture_mean = dados.get("texture")
+                perimeter_mean = dados.get("perimeter")
+                area_mean = dados.get("area")
+            else:
+                # Se não for JSON, pega os dados do formulário HTML
+                radius_mean = float(request.form.get("radius"))
+                texture_mean = float(request.form.get("texture"))
+                perimeter_mean = float(request.form.get("perimeter"))
+                area_mean = float(request.form.get("area"))
+            
+            # Verifica se todos os dados necessários foram fornecidos
+            if None in [radius_mean, texture_mean, perimeter_mean, area_mean]:
+                return jsonify({"erro": "Todos os campos são obrigatórios"}), 400
 
             # Agrupa os dados em um array para predição
             features = np.array([[radius_mean, texture_mean, perimeter_mean, area_mean]])
@@ -59,8 +73,15 @@ def index():
 
             cursor.close()
             conn.close()
+            
+            if request.is_json:
+                return jsonify({"predicao": diagnostico, "dados": dados}), 200
 
+            # Caso contrário, renderiza o HTML com os dados
             return render_template("index.html", previsao=diagnostico, dados=dados)
+
+        except Exception as e:
+            return jsonify({"erro": f"Erro: {str(e)}"}), 500
 
         except Exception as e:
             return render_template("index.html", previsao=f"Erro: {e}")
