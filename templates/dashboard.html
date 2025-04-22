@@ -33,28 +33,40 @@
                     <div class="card-body">
                         <h5 class="card-title">Total de Previsões</h5>
                         <p class="card-text">Número total de previsões realizadas até o momento.</p>
-                        <h3 id="totalPredicoes">{{ contagem_classes['Maligno'] + contagem_classes['Benigno'] if
-                            contagem_classes else 0 }}</h3>
+                        <h3 id="totalPredicoes">
+                            {{ contagem_classes['Maligno'] + contagem_classes['Benigno'] if contagem_classes else 0 }}
+                        </h3>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card" style="min-height: 180px;">
                     <div class="card-body">
-                        <h5 class="card-title">Predições Positivas</h5>
-                        <p class="card-text">Número de previsões positivas realizadas.</p>
-                        <h3 id="predicoesPositivas">{{ contagem_classes['Benigno'] if 'Benigno' in contagem_classes else
-                            0 }}</h3>
+                        <h5 class="card-title">Predições Positivas (%)</h5>
+                        <p class="card-text">Porcentagem de predições benignas realizadas.</p>
+                        <h3 id="predicoesPositivas">
+                            {% set total = contagem_classes['Maligno'] + contagem_classes['Benigno'] if contagem_classes else 0 %}
+                            {% if total > 0 %}
+                                {{ ((contagem_classes['Benigno'] / total) * 100) | round(2) }}%
+                            {% else %}
+                                0%
+                            {% endif %}
+                        </h3>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card" style="min-height: 180px;">
                     <div class="card-body">
-                        <h5 class="card-title">Predições Negativas</h5>
-                        <p class="card-text">Número de previsões negativas realizadas.</p>
-                        <h3 id="predicoesNegativas">{{ contagem_classes['Maligno'] if 'Maligno' in contagem_classes else
-                            0 }}</h3>
+                        <h5 class="card-title">Predições Negativas (%)</h5>
+                        <p class="card-text">Porcentagem de predições malignas realizadas.</p>
+                        <h3 id="predicoesNegativas">
+                            {% if total > 0 %}
+                                {{ ((contagem_classes['Maligno'] / total) * 100) | round(2) }}%
+                            {% else %}
+                                0%
+                            {% endif %}
+                        </h3>
                     </div>
                 </div>
             </div>
