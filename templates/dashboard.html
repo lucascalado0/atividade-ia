@@ -45,11 +45,12 @@
                         <h5 class="card-title">Predições Positivas (%)</h5>
                         <p class="card-text">Porcentagem de predições benignas realizadas.</p>
                         <h3 id="predicoesPositivas">
-                            {% set total = contagem_classes['Maligno'] + contagem_classes['Benigno'] if contagem_classes else 0 %}
+                            {% set total = contagem_classes['Maligno'] + contagem_classes['Benigno'] if contagem_classes
+                            else 0 %}
                             {% if total > 0 %}
-                                {{ ((contagem_classes['Benigno'] / total) * 100) | round(2) }}%
+                            {{ ((contagem_classes['Benigno'] / total) * 100) | round(2) }}%
                             {% else %}
-                                0%
+                            0%
                             {% endif %}
                         </h3>
                     </div>
@@ -62,11 +63,22 @@
                         <p class="card-text">Porcentagem de predições malignas realizadas.</p>
                         <h3 id="predicoesNegativas">
                             {% if total > 0 %}
-                                {{ ((contagem_classes['Maligno'] / total) * 100) | round(2) }}%
+                            {{ ((contagem_classes['Maligno'] / total) * 100) | round(2) }}%
                             {% else %}
-                                0%
+                            0%
                             {% endif %}
                         </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Distribuição Percentual das Previsões</h5>
+                        <canvas id="graficoPizza" style="max-width: 400px; max-height: 400px;"></canvas>
                     </div>
                 </div>
             </div>
@@ -78,7 +90,18 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Gráfico de Previsões</h5>
-                        <canvas id="predicoesChart"></canvas>
+                        <canvas id="predicoesChart" style="max-width: 400px; max-height: 400px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Evolução Temporal das Predições</h5>
+                        <canvas id="graficoLinha"></canvas>
                     </div>
                 </div>
             </div>
@@ -91,7 +114,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Detalhes das Predições</h5>
                         <p>Registros carregados: {{ registros|length }}</p> <!-- Diagnóstico para debug -->
-        
+
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
@@ -121,7 +144,7 @@
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>
     </div>
 
     <script>
@@ -147,6 +170,94 @@
                 scales: {
                     y: {
                         beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Pizza (Pie Chart)
+        var ctxPizza = document.getElementById('graficoPizza').getContext('2d');
+        var graficoPizza = new Chart(ctxPizza, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Distribuição das Previsões',
+                    data: data,
+                    backgroundColor: ['#81c784', '#e57373'],  // verde claro e vermelho claro
+                    borderColor: ['#388e3c', '#d32f2f'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                let total = context.chart._metasets[context.datasetIndex].total;
+                                let value = context.parsed;
+                                let percentage = ((value / total) * 100).toFixed(2);
+                                return `${context.label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const labelsTemporais = JSON.parse('{{ labels_temporais | tojson | safe }}');
+        const dadosBenignos = JSON.parse('{{ benignos | tojson | safe }}');
+        const dadosMalignos = JSON.parse('{{ malignos | tojson | safe }}');
+
+        var ctxLinha = document.getElementById('graficoLinha').getContext('2d');
+        var graficoLinha = new Chart(ctxLinha, {
+            type: 'line',
+            data: {
+                labels: labelsTemporais,
+                datasets: [
+                    {
+                        label: 'Benigno',
+                        data: dadosBenignos,
+                        borderColor: '#4caf50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Maligno',
+                        data: dadosMalignos,
+                        borderColor: '#f44336',
+                        backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Data e Hora'
+                        },
+                        ticks: {
+                            maxRotation: 90,
+                            minRotation: 45
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Quantidade de Previsões'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top'
                     }
                 }
             }
